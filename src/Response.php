@@ -1,6 +1,7 @@
 <?php namespace Rap2hpoutre\Jacky;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
 use Iterator;
 
 /**
@@ -18,16 +19,21 @@ class Response implements Iterator, Arrayable
      * @var
      */
     private $body;
+	/**
+	 * @var Collection
+	 */
+	private $headers;
 
     /**
      * Response constructor.
      * @param $body
      * @param $accessors
      */
-    public function __construct($body, $accessors)
+    public function __construct($body, $accessors, $headers)
     {
         $this->body = $body;
         $this->properties = json_decode($this->body);
+		$this->headers = collect($headers);
 
         foreach ($accessors as $key => $callback) {
             if (isset($this->properties->$key)) {
@@ -128,4 +134,14 @@ class Response implements Iterator, Arrayable
     {
         return collect($this->toArray());
     }
+	
+	/**
+	 * Get response header as a Collection.
+	 * 
+	 * @return Collection
+	 */
+	public function getHeaders()
+	{
+		return $this->headers;
+	}
 }

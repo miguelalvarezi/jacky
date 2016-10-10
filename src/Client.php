@@ -32,7 +32,8 @@ class Client
         
         $response = new Response(
             $guzzle_response->getBody(),
-            config("jacky.servers.$server.accessors", [])
+            config("jacky.servers.$server.accessors", []),
+			$guzzle_response->getHeaders()
         );
         
         $status_code = $guzzle_response->getStatusCode();
